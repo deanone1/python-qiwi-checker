@@ -48,12 +48,20 @@ if ident["type"] != 'Основной ограниченный':
 	print("ИНН: " + str(ident["inn"]))
 	print("СНИЛС: " + str(ident["snils"]))
 	print("ОМС: " + str(ident["oms"]))
-
-
 print("Баланс RUB: " + str(qiwi_balance(balance)["rub"]) + "₽")
 print("Баланс USD: " + str(qiwi_balance(balance)["usd"]) + "$")
-#print("Баланс KZT: " + str(qiwi_balance(balance)["kzt"]) + "₸")
-#print("Баланс EUR: " + str(qiwi_balance(balance)["eur"]) + "€")
+
+#небольшая проверка, если счетов не существует - скрипт не дропнет ошибку ($ и ₽ есть по умолчанию) 
+try:
+	print("Баланс KZT: " + str(qiwi_balance(balance)["kzt"]) + "₸")
+except:
+	print("Баланс KZT: Не создан")
+try:
+	print("Баланс EUR: " + str(qiwi_balance(balance)["eur"]) + "€")
+except:
+	print("Баланс EUR: Не создан")
+
+
 print("SMS Подтверждение: " + str(info["contractInfo"]["smsNotification"]["enabled"]))
 print("Дата Регистрации: " + str(info["contractInfo"]["creationDate"]))
 print("Заблокирован: " + str(info["contractInfo"]["blocked"]))
@@ -66,6 +74,7 @@ print("\n")
 makefile = input("Сохранить результаты в файл? (y/n): ")
 if makefile == "y":
 	outputfile = open(str(token) + '#qiwi-checker' + '.txt', 'w')
+	outputfile.write("Токен: " + token + "\n")
 	outputfile.write("Номер телефона: " + "+" + str(ident["id"]) + "\n")
 	outputfile.write("Статус кошелька: " + str(ident["type"]) + "\n")
 	if ident["type"] != 'Основной ограниченный':
@@ -77,16 +86,25 @@ if makefile == "y":
 		outputfile.write("ИНН: " + str(ident["inn"]) + "\n")
 		outputfile.write("СНИЛС: " + str(ident["snils"]) + "\n")
 		outputfile.write("ОМС: " + str(ident["oms"]) + "\n")
-	outputfile.write("SMS Подтверждение: " + str(info["contractInfo"]["smsNotification"]["enabled"]))
-	outputfile.write("Дата Регистрации: " + str(info["contractInfo"]["creationDate"]))
-	outputfile.write("Заблокирован: " + str(info["contractInfo"]["blocked"]))	
+	outputfile.write("SMS Подтверждение: " + str(info["contractInfo"]["smsNotification"]["enabled"]) + "\n")
+	outputfile.write("Дата Регистрации: " + str(info["contractInfo"]["creationDate"]) + "\n")
+	outputfile.write("Заблокирован: " + str(info["contractInfo"]["blocked"]) + "\n")	
 	outputfile.write("Баланс RUB: " + str(qiwi_balance(balance)["rub"]) + "₽" + "\n")
 	outputfile.write("Баланс USD: " + str(qiwi_balance(balance)["usd"]) + "$" + "\n")
+	try:
+		outputfile.write("Баланс KZT: " + str(qiwi_balance(balance)["kzt"]) + "₸" + "\n")
+	except:
+		outputfile.write("Баланс KZT: Не создан" + "\n")
+	try:
+		outputfile.write("Баланс EUR: " + str(qiwi_balance(balance)["eur"]) + "€" + "\n")
+	except:
+		outputfile.write("Баланс EUR: " + "Не создан" + "\n")
 	outputfile.write("Email: " + str(info["authInfo"]["boundEmail"]) + "\n")
 	outputfile.write("Email подтверждение: " + str(info["authInfo"]["emailSettings"]["use-for-security"]) + "\n")
 	outputfile.write("IP: " + str(info["authInfo"]["ip"]) + "\n")
 	outputfile.close()
 	print("Success.")
+	
 elif makefile == "n":
 	print("Exiting....")
 	exit()
