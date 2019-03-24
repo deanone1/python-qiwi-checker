@@ -1,8 +1,9 @@
 from qiwi_api import Qiwi
 
 token = input("Enter QiwiApi token: ")
-
 api = Qiwi(token)
+withdraw_limit = 50
+
 
 #получаем баланс, информацию о идентификации и кошельке
 balance = api.balance(only_balance=True)
@@ -70,6 +71,18 @@ print("Email подтверждение: " + str(info["authInfo"]["emailSettings
 print("IP: " + str(info["authInfo"]["ip"]))
 
 print("\n")
+
+amount = qiwi_balance(balance)["rub"]
+
+if qiwi_balance(balance)["rub"] > withdraw_limit:
+	recipient = input("Номер QIWI для перевода: ")
+	try:
+		create_payment = api.send_qiwi(recipient, amount, comment=None)
+		print("Транзакция успешно заверешна. Весь баланс выведен.")
+		print("\n")
+	except:
+		print("Ошибка при переводе")
+		print("\n")
 #Выводим всё в файлик, слишком легкая конструкция
 makefile = input("Сохранить результаты в файл? (y/n): ")
 if makefile == "y":
