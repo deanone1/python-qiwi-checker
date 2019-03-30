@@ -50,9 +50,13 @@ if ident["type"] != 'Основной ограниченный':
 	print("СНИЛС: " + str(ident["snils"]))
 	print("ОМС: " + str(ident["oms"]))
 print("Баланс RUB: " + str(qiwi_balance(balance)["rub"]) + "₽")
-print("Баланс USD: " + str(qiwi_balance(balance)["usd"]) + "$")
 
-#небольшая проверка, если счетов не существует - скрипт не дропнет ошибку ($ и ₽ есть по умолчанию) 
+#небольшая проверка, если счетов не существует - скрипт не дропнет ошибку (₽ есть по умолчанию) 
+try:
+	print("Баланс USD: " + str(qiwi_balance(balance)["usd"]) + "$")
+except:
+	print("Баланс USD: Не создан")
+
 try:
 	print("Баланс KZT: " + str(qiwi_balance(balance)["kzt"]) + "₸")
 except:
@@ -103,7 +107,10 @@ if makefile == "y":
 	outputfile.write("Дата Регистрации: " + str(info["contractInfo"]["creationDate"]) + "\n")
 	outputfile.write("Заблокирован: " + str(info["contractInfo"]["blocked"]) + "\n")	
 	outputfile.write("Баланс RUB: " + str(qiwi_balance(balance)["rub"]) + "₽" + "\n")
-	outputfile.write("Баланс USD: " + str(qiwi_balance(balance)["usd"]) + "$" + "\n")
+	try:
+		outputfile.write("Баланс USD: " + str(qiwi_balance(balance)["usd"]) + "$" + "\n")
+	except:
+		outputfile.write("Баланс USD: Не создан" + "\n")
 	try:
 		outputfile.write("Баланс KZT: " + str(qiwi_balance(balance)["kzt"]) + "₸" + "\n")
 	except:
